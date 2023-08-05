@@ -3,15 +3,14 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-
+require('dotenv').config();
 const router = express.Router();
-const JWT_SECRET = 'your_secret_key';
-
-const User = require('../models/user');
+const JWT_SECRET = process.env.JWT_TOKEN;
+const User = require('../models/User.model');
 
 router.post('/register', async (req, res) => {
     try {
-        const { username, email, password } = req.body;
+        const { name, email, password } = req.body;
 
         const existingUser = await User.findOne({ email });
         if (existingUser) {
@@ -21,12 +20,12 @@ router.post('/register', async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, salt);
 
 
-        const newUser = new User({ username, email, password: hashedPassword });
+        const newUser = new User({ name, email, password: hashedPassword });
         await newUser.save();
 
         res.status(201).json({ message: 'User registered successfully' });
     } catch (error) {
-        res.status(500).json({ message: 'Internal server error' });
+        res.status(500).json({ message: 'Internal server error ' + error });
     }
 });
 
@@ -49,9 +48,9 @@ router.post('/login', async (req, res) => {
 
         const token = jwt.sign({ userId: user._id }, JWT_SECRET);
 
-        res.json({ token });
+        res.json({ token, userId: user._id, name: user.name });
     } catch (error) {
-        res.status(500).json({ message: 'Internal server error' });
+        res.status(500).json({ message: 'Internal server error' + error });
     }
 });
 
