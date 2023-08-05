@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { Link, useNavigate } from 'react-router-dom';
 import cookie from 'js-cookie';
 import axios from 'axios';
@@ -23,8 +25,24 @@ const Login = () => {
             cookie.set('userId', res.data.userId);
             cookie.set('userName', res.data.name);
             navigate('/dashboard');
+            toast.success('Login successful!', {
+                position: 'top-right',
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
         }).catch((err) => {
             console.log(err);
+            toast.error('Login failed. Please check your credentials.', {
+                position: 'top-right',
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
         })
     };
 

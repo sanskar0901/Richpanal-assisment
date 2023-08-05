@@ -34,10 +34,10 @@ const Navbar = () => {
                     </div>
                 ) : (
                     <div className='flex gap-4'>
-                        <Link to="/plans" className="px-4 py-2 bg-blue-500 text-white rounded-full">
+                        <Link to="/plans" className="px-4 py-2 bg-blue-500 text-white rounded-full transition-all duration-300 hover:bg-blue-600">
                             Buy Plans
                         </Link>
-                        <button className="px-4 py-2 bg-gray-500 text-white rounded-full" onClick={handleLogout}>
+                        <button className="px-4 py-2 bg-gray-500 text-white rounded-full hover:bg-gray-600 transition-all duration-300" onClick={handleLogout}>
                             Logout
                         </button>
                     </div>

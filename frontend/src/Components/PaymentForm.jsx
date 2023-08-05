@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 import { useNavigate } from 'react-router';
 import { CardNumberElement, CardExpiryElement, CardCvcElement, useStripe, useElements } from '@stripe/react-stripe-js';
@@ -33,14 +35,11 @@ const PaymentForm = ({ selectedPlan, billingInterval, onClose }) => {
     const handleSubmit = async (event) => {
         setLoading(true);
         event.preventDefault();
-        console.log(selectedPlan._id)
+        console.log(selectedPlan._id);
 
         if (!stripe || !elements) {
-            // Stripe.js has not yet loaded.
             return;
         }
-
-        // Create a PaymentMethod using the CardElement
         const { paymentMethod, error } = await stripe.createPaymentMethod({
             type: 'card',
             card: elements.getElement(CardCvcElement, CardExpiryElement, CardNumberElement),
@@ -48,25 +47,41 @@ const PaymentForm = ({ selectedPlan, billingInterval, onClose }) => {
 
         if (error) {
             console.error(error.message);
+            setLoading(false);
+            toast.error('Error creating subscription. Please try again.');
+            return;
+        }
 
-        } else {
+        const paymentMethodId = paymentMethod.id;
 
-            const paymentMethodId = paymentMethod.id;
-
-            try {
-                const response = await axios.post(`${api}/subscription/subscribe`, {
+        try {
+            await toast.promise(
+                axios.post(`${api}/subscription/subscribe`, {
                     paymentMethodId,
                     planId: selectedPlan._id,
                     userId: cookie.get('userId'),
-                    billingInterval
-                });
-                const data = response.data;
-                setStatus(data.status);
-                navigate('/dashboard');
-                setLoading(false);
-            } catch (error) {
-                console.error('Error calling API:', error);
-            }
+                    billingInterval,
+                }),
+                {
+                    pending: 'Creating subscription...',
+                    success: 'Subscription created successfully!',
+                    error: 'Error creating subscription. Please try again.',
+                },
+                {
+                    position: 'top-right',
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                }
+            );
+
+            // setStatus(data.status);
+            navigate('/dashboard');
+            setLoading(false);
+        } catch (error) {
+            console.error('Error calling API:', error);
         }
     };
 
@@ -77,7 +92,8 @@ const PaymentForm = ({ selectedPlan, billingInterval, onClose }) => {
 
             <div className='flex gap-4 justify-between '>
                 <div className="bg-white p-6 ">
-                    <h3 className="text-xl font-bold mb-4">Plan: {selectedPlan.name}</h3>
+                    <h3 className="text-xl font-bold mb-4">Plan Summary</h3>
+                    <p className="text-lg mb-4">Plan: {selectedPlan.name}</p>
                     <p className="text-lg mb-2">Price: <b>{billingInterval === 'monthly' ? selectedPlan.monthlyPrice : selectedPlan.yearlyPrice}</b></p>
                     <p className="mb-2">Billing Interval: <b>{billingInterval}</b></p>
                     <p className="mb-2">Resolution: <b>{selectedPlan.resolution}</b> </p>
@@ -127,12 +143,12 @@ const PaymentForm = ({ selectedPlan, billingInterval, onClose }) => {
 
                             <button
                                 type='submit'
-                                className={`px-4 py-2 bg-blue-500 text-white rounded-full ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                className={`px-4 py-2 bg-blue-500 text-white rounded-full transition-all duration-300 hover:bg-blue-600 ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
                                 disabled={isLoading}
                             >
                                 {isLoading ? 'Subscribing...' : 'Subscribe'}
                             </button>
-                            <button onClick={onClose} className="px-4 py-2 bg-gray-500 text-white rounded-full">
+                            <button onClick={onClose} className="px-4 py-2 bg-gray-500 text-white rounded-full  hover:bg-gray-600  transition-all duration-300">
                                 Cancel
                             </button>
                         </div>

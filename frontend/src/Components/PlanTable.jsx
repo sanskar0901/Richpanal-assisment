@@ -53,14 +53,14 @@ const PlanTable = () => {
 
                 <div className="flex items-center justify-center mt-4 mb-2">
                     <button
-                        className={`px-4 py-2 rounded-full ${showYearly ? 'bg-gray-300 text-gray-600' : 'bg-blue-500 text-white'
+                        className={`px-4 py-2 rounded-full ${showYearly ? 'bg-gray-300 text-gray-600 transition-all duration-300 hover:bg-slate-400' : 'bg-blue-500 text-white'
                             }`}
                         onClick={togglePlanDuration}
                     >
                         Monthly
                     </button>
                     <button
-                        className={`px-4 py-2 rounded-full ml-2 ${showYearly ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-600'
+                        className={`px-4 py-2 rounded-full ml-2 ${showYearly ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-600 transition-all duration-300 hover:bg-slate-400'
                             }`}
                         onClick={togglePlanDuration}
                     >
@@ -80,7 +80,7 @@ const PlanTable = () => {
                     </thead>
                     <tbody>
                         {plans.map((plan) => (
-                            <tr key={plan._id} className={`${plan._id === selectedPlanId ? 'bg-blue-400' : ''} hover:cursor-pointer hover:bg-slate-300`} onClick={() => handlePlanSelect(plan._id)}>
+                            <tr key={plan._id} className={`${plan._id === selectedPlanId ? 'bg-blue-400' : ''} transition-all duration-300 hover:cursor-pointer hover:bg-slate-300`} onClick={() => handlePlanSelect(plan._id)}>
                                 <td className="border px-4 py-2"> <button
 
                                     className="px-4 py-2 bg-blue-500 text-white rounded-full"
@@ -104,7 +104,7 @@ const PlanTable = () => {
                 <div className="mt-4">
                     <button
                         onClick={handleSubscribeClick}
-                        className="px-4 py-2 bg-blue-500 text-white rounded-full"
+                        className="px-4 py-2 bg-blue-500 text-white rounded-full transition-all duration-300 hover:bg-blue-600"
                     >
                         Subscribe
                     </button>
