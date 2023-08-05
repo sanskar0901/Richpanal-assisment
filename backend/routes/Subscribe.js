@@ -79,12 +79,16 @@ router.get('/get/:id', async (req, res) => {
         // Fetch plans for each subscription using Promise.all() and map
         const plansPromises = subscriptions.map(async (subs) => {
             const plan = await BillingPlan.findById(subs.plan);
-            return plan;
+            return {
+                ...plan.toObject(),
+                expDate: subs.expDate,
+                billingInterval: subs.billingInterval,
+            };
         });
 
         const plans = await Promise.all(plansPromises);
 
-        res.json({ plans, expDate: subscriptions.expDate });
+        res.json({ plans });
     } catch (error) {
         res.status(500).json({ message: 'Server error' + error });
     }

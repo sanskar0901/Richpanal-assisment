@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router';
 import { CardNumberElement, CardExpiryElement, CardCvcElement, useStripe, useElements } from '@stripe/react-stripe-js';
@@ -29,7 +29,9 @@ const PaymentForm = ({ selectedPlan, billingInterval, onClose }) => {
     const stripe = useStripe();
     const elements = useElements();
     const [status, setStatus] = React.useState(null);
+    const [isLoading, setLoading] = useState(false);
     const handleSubmit = async (event) => {
+        setLoading(true);
         event.preventDefault();
         console.log(selectedPlan._id)
 
@@ -61,6 +63,7 @@ const PaymentForm = ({ selectedPlan, billingInterval, onClose }) => {
                 const data = response.data;
                 setStatus(data.status);
                 navigate('/dashboard');
+                setLoading(false);
             } catch (error) {
                 console.error('Error calling API:', error);
             }
@@ -123,10 +126,11 @@ const PaymentForm = ({ selectedPlan, billingInterval, onClose }) => {
 
 
                             <button
-                                type="submit"
-                                className="px-4 py-2 bg-blue-500 text-white rounded-full"
+                                type='submit'
+                                className={`px-4 py-2 bg-blue-500 text-white rounded-full ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                disabled={isLoading}
                             >
-                                Conform Payment
+                                {isLoading ? 'Subscribing...' : 'Subscribe'}
                             </button>
                             <button onClick={onClose} className="px-4 py-2 bg-gray-500 text-white rounded-full">
                                 Cancel

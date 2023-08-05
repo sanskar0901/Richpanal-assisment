@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import cookie from 'js-cookie';
 import axios from 'axios';
@@ -8,7 +8,11 @@ const Login = () => {
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-
+    useEffect(() => {
+        if (cookie.get('isLoggedIn') === 'true') {
+            navigate('/dashboard');
+        }
+    })
     const handleLogin = () => {
         axios.post(`${api}/user/login`, {
             email,
