@@ -29,13 +29,13 @@ router.post('/subscribe', async (req, res) => {
             customer: customer.id,
             items: [{ price: priceId }],
         });
-
+        let expDate = billingInterval === 'monthly' ? Date.now() + 30 * 24 * 60 * 60 * 1000 : Date.now() + 365 * 24 * 60 * 60 * 1000
         const subscription = new Subscription({
             user: userId,
             plan: planId,
             billingInterval,
             stripeSubscriptionId: stripeSubscription.id,
-            status: "initiated"
+            expDate
         });
 
         await subscription.save();
@@ -49,7 +49,6 @@ router.post('/subscribe', async (req, res) => {
     }
 });
 
-module.exports = router;
 
 router.post('/cancel', async (req, res) => {
     const { userId, subscriptionId } = req.body;
@@ -69,3 +68,26 @@ router.post('/cancel', async (req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 });
+
+router.get('/get/:id', async (req, res) => {
+    try {
+        const subscriptions = await Subscription.find({ user: req.params.id });
+        if (!subscriptions || subscriptions.length === 0) {
+            return res.status(404).json({ message: 'Subscription not found' });
+        }
+
+        // Fetch plans for each subscription using Promise.all() and map
+        const plansPromises = subscriptions.map(async (subs) => {
+            const plan = await BillingPlan.findById(subs.plan);
+            return plan;
+        });
+
+        const plans = await Promise.all(plansPromises);
+
+        res.json({ plans, expDate: subscriptions.expDate });
+    } catch (error) {
+        res.status(500).json({ message: 'Server error' + error });
+    }
+
+})
+module.exports = router;

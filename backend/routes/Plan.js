@@ -27,10 +27,10 @@ router.post('/add', async (req, res) => {
                 screens: screens,
             }
         });
-        const yearly = await stripe.prices.create({
-            unit_amount: yearlyPrice * 100,
+        const yearly = await stripe.plans.create({
+            amount: yearlyPrice * 100,
             currency: 'usd',
-            // interval: 'year',
+            interval: 'year',
             product: product.id,
             nickname: 'Basic yearly',
             metadata: {
@@ -93,13 +93,6 @@ router.delete('/:id', async (req, res) => {
     }
 });
 
-router.get('/get/:id', async (req, res) => {
-    await Plan.find({ userId: req.params.id })
-        .than(async (plan) => {
-            res.status(200).json(plan);
-        }).catch((err) => {
-            res.status(500).json({ error: 'Failed to fetch the plan.' });
-        })
-})
+
 
 module.exports = router;
