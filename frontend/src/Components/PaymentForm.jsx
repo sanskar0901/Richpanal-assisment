@@ -1,10 +1,12 @@
 import React from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router';
 import { CardNumberElement, CardExpiryElement, CardCvcElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { api } from '../constants'
+import cookie from 'js-cookie';
 
 const PaymentForm = ({ selectedPlan, billingInterval, onClose }) => {
-
+    const navigate = useNavigate();
 
     const cardElementOptions = {
         style: {
@@ -53,11 +55,12 @@ const PaymentForm = ({ selectedPlan, billingInterval, onClose }) => {
                 const response = await axios.post(`${api}/subscription/subscribe`, {
                     paymentMethodId,
                     planId: selectedPlan._id,
-                    userId: "64cdeb9f17fa7426bde48916",
+                    userId: cookie.get('userId'),
                     billingInterval
                 });
                 const data = response.data;
                 setStatus(data.status);
+                navigate('/dashboard');
             } catch (error) {
                 console.error('Error calling API:', error);
             }
@@ -65,62 +68,72 @@ const PaymentForm = ({ selectedPlan, billingInterval, onClose }) => {
     };
 
     return (
-        <div>
-            <h2 className="text-xl font-bold mb-2">Subscribe to {selectedPlan.name}</h2>
-            <form onSubmit={handleSubmit}>
-                <div className="mb-4">
-                    <label htmlFor="card-element" className="block mb-2">
-                        Card Details
-                    </label>
-                    <div id="card-element" className="p-2 border rounded bg-slate-100">
-                        <div className='mb-4'>
-                            <label htmlFor="cardNumber" className="block mb-2 text-left">
-                                Card Number
-                            </label>
-                            <div id="cardNumber" className="p-2 border rounded bg-white">
-                                <CardNumberElement options={cardElementOptions} />
-                            </div>
+        <div className='rounded-md shadow-md p-4'>
 
-                        </div>
+            <h2 className="text-xl font-bold mb-4 text-center">Subscribe to {selectedPlan.name} Plan</h2>
 
-                        <div className="mb-4">
-                            <label htmlFor="cardExpiry" className="block mb-2 text-left">
-                                Expiry Date
-                            </label>
-                            <div id="cardExpiry" className="p-2 border rounded bg-white">
-                                <CardExpiryElement options={cardElementOptions} />
-                            </div>
-                        </div>
-                        <div className="mb-4">
-                            <label htmlFor="cardCvc" className="block mb-2 text-left">
-                                CVC
-                            </label>
-                            <div id="cardCvc" className="p-2 border rounded bg-white">
-                                <CardCvcElement options={cardElementOptions} />
-                            </div>
-                        </div>
-                    </div>
+            <div className='flex gap-4 justify-between '>
+                <div className="bg-white p-6 ">
+                    <h3 className="text-xl font-bold mb-4">Plan: {selectedPlan.name}</h3>
+                    <p className="text-lg mb-2">Price: <b>{billingInterval === 'monthly' ? selectedPlan.monthlyPrice : selectedPlan.yearlyPrice}</b></p>
+                    <p className="mb-2">Billing Interval: <b>{billingInterval}</b></p>
+                    <p className="mb-2">Resolution: <b>{selectedPlan.resolution}</b> </p>
+                    <p className="mb-2">Video Quality: <b>{selectedPlan.videoQuality}</b> </p>
+                    <p className="mb-2">Devices: <b>{selectedPlan.devices.toString()}</b> </p>
+                    <p className="mb-2">Screens: <b>{selectedPlan.screens}</b> </p>
                 </div>
-                <div className='flex gap-4 items-center justify-center'>
+                <div>
 
 
-                    <button
-                        type="submit"
-                        className="px-4 py-2 bg-blue-500 text-white rounded-full"
-                    >
-                        Conform Payment
-                    </button>
-                    <button onClick={onClose} className="px-4 py-2 bg-gray-500 text-white rounded-full">
-                        Cancel
-                    </button>
+                    <form onSubmit={handleSubmit} className='w-[20vw]'>
+                        <div className="mb-4">
+                            <label htmlFor="card-element" className="block mb-2">
+                                Card Details
+                            </label>
+                            <div id="card-element" className="p-2 border rounded bg-slate-100">
+                                <div className='mb-4'>
+                                    <label htmlFor="cardNumber" className="block mb-2 text-left">
+                                        Card Number
+                                    </label>
+                                    <div id="cardNumber" className="p-2 border rounded bg-white">
+                                        <CardNumberElement options={cardElementOptions} />
+                                    </div>
+
+                                </div>
+
+                                <div className="mb-4">
+                                    <label htmlFor="cardExpiry" className="block mb-2 text-left">
+                                        Expiry Date
+                                    </label>
+                                    <div id="cardExpiry" className="p-2 border rounded bg-white">
+                                        <CardExpiryElement options={cardElementOptions} />
+                                    </div>
+                                </div>
+                                <div className="mb-4">
+                                    <label htmlFor="cardCvc" className="block mb-2 text-left">
+                                        CVC
+                                    </label>
+                                    <div id="cardCvc" className="p-2 border rounded bg-white">
+                                        <CardCvcElement options={cardElementOptions} />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className='flex gap-4 items-center justify-center'>
+
+
+                            <button
+                                type="submit"
+                                className="px-4 py-2 bg-blue-500 text-white rounded-full"
+                            >
+                                Conform Payment
+                            </button>
+                            <button onClick={onClose} className="px-4 py-2 bg-gray-500 text-white rounded-full">
+                                Cancel
+                            </button>
+                        </div>
+                    </form>
                 </div>
-            </form>
-            <div >
-                <p>plan: {selectedPlan.name}</p>
-                <p>price: {selectedPlan.price}</p>
-                <p>status: {status}</p>
-                <p>BillingInterval: {billingInterval}</p>
-
             </div>
         </div>
     );

@@ -4,8 +4,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Login from './Components/Login';
 import Signup from './Components/Signup';
 import PlanTable from './Components/PlanTable';
-// import Dashboard from './Components/Dashboard';
-import ProtectedRoute from './Components/ProtectedRoute';
+import Dashboard from './Components/Dashboard';
 
 function App() {
   return (
@@ -14,8 +13,8 @@ function App() {
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
-          {/* Use ProtectedRoute for the dashboard */}
-          <ProtectedRoute path="/dashboard" element={<PlanTable />} />
+          <Route path="/plans" element={<PlanTable />} />
+          <Route path="/dashboard" element={<Dashboard />} />
         </Routes>
       </div>
     </Router>
