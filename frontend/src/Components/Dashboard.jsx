@@ -20,7 +20,6 @@ const Dashboard = () => {
         })
     }, []);
 
-    // Function to calculate the time left in the expiration of the plan
     const getTimeLeft = (expirationDate) => {
         const currentDate = new Date();
         const expiryDate = new Date(expirationDate);
@@ -61,7 +60,6 @@ const Dashboard = () => {
                                     <p>Price: {plan.billingInterval === 'yearly' ? plan.yearlyPrice : plan.monthlyPrice}</p>
                                     <p>Duration: {plan.billingInterval}</p>
                                     <p>Video Quality: {plan.videoQuality}</p>
-                                    {/* Display the time left in the expiration of the plan */}
                                     {plan.expDate && (
                                         <p>Expires in: <b>{getTimeLeft(plan.expDate)} days</b></p>
                                     )}
