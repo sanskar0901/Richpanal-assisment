@@ -31,36 +31,51 @@ const Signup = () => {
     }
 
     return (
-        <div className="flex flex-col items-center justify-center h-screen bg-slate-300">
-            <h2 className="text-2xl font-bold mb-4">Signup</h2>
-            <input
-                type="name"
-                placeholder="Name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="px-4 py-2 border rounded mb-2"
-            />
-            <input
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="px-4 py-2 border rounded mb-2"
-            />
-            <input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="px-4 py-2 border rounded mb-4"
-            />
-            <button
-                onClick={handleSignup}
-                className="px-4 py-2 bg-blue-500 text-white rounded-full"
+        <div
+            className="h-screen flex items-center justify-center
+            bg-gradient-to-t from-blue-300 to-blue-400"
+        >
+            <div
+                className="bg-white bg-opacity-40 backdrop-blur-lg
+                        rounded-lg shadow-lg p-8 max-w-md w-full"
             >
-                Signup
-            </button>
-            <p>Already have  account? <Link to="/" className="text-blue-500">Login</Link> now</p>
+                <h2 className="text-2xl font-bold mb-4">Signup</h2>
+                <input
+                    type="name"
+                    placeholder="Name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="px-4 py-2 border rounded mb-2 w-full"
+                />
+                <input
+                    type="email"
+                    placeholder="Email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="px-4 py-2 border rounded mb-2 w-full"
+                />
+                <input
+                    type="password"
+                    placeholder="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="px-4 py-2 border rounded mb-4 w-full"
+                />
+
+                <button
+                    onClick={handleSignup}
+                    className="px-4 py-2 bg-blue-500 text-white rounded-full w-full hover:bg-blue-600"
+                >
+                    Signup
+                </button>
+                <p className="text-center mt-4">
+                    Already have an account?{' '}
+                    <Link to="/" className="text-blue-500 font-bold hover:underline">
+                        Login
+                    </Link>{' '}
+                    now
+                </p>
+            </div>
         </div>
     );
 };

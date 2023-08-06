@@ -49,7 +49,7 @@ const PlanTable = () => {
     return (
         <div>
             <Navbar />
-            <div className="flex flex-col items-center justify-center">
+            <div className="flex flex-col items-center justify-start bg-gradient-to-t from-blue-300 to-blue-400 h-[100vh] py-20">
 
                 <div className="flex items-center justify-center mt-4 mb-2">
                     <button
@@ -67,7 +67,7 @@ const PlanTable = () => {
                         Yearly
                     </button>
                 </div>
-                <table className="w-full border-collapse table-auto">
+                <table className="w-[80%] border-collapse table-auto bg-opacity-40 backdrop-blur-lg mx-8">
                     <thead>
                         <tr>
                             <th className="border px-4 py-2">Plan Name</th>
@@ -80,7 +80,7 @@ const PlanTable = () => {
                     </thead>
                     <tbody>
                         {plans.map((plan) => (
-                            <tr key={plan._id} className={`${plan._id === selectedPlanId ? 'bg-blue-400' : ''} transition-all duration-300 hover:cursor-pointer hover:bg-slate-300`} onClick={() => handlePlanSelect(plan._id)}>
+                            <tr key={plan._id} className={`${plan._id === selectedPlanId ? 'bg-slate-300' : ''} transition-all duration-300 hover:cursor-pointer hover:bg-slate-300`} onClick={() => handlePlanSelect(plan._id)}>
                                 <td className="border px-4 py-2"> <button
 
                                     className="px-4 py-2 bg-blue-500 text-white rounded-full"
@@ -94,9 +94,7 @@ const PlanTable = () => {
                                 <td className="border px-4 py-2">{plan.resolution}</td>
                                 <td className="border px-4 py-2">{plan.devices.toString()}</td>
                                 <td className="border px-4 py-2">{plan.screens}</td>
-                                <td className="border px-4 py-2">
 
-                                </td>
                             </tr>
                         ))}
                     </tbody>

@@ -13,7 +13,7 @@ const Navbar = () => {
         navigate('/');
     }
     return (
-        <nav className="bg-blue-200 p-4 flex justify-between items-center">
+        <nav className="bg-blue-200 p-4 flex justify-between items-center fixed w-full">
             <div className="flex items-center">
                 <div className="mr-4 text-lg font-bold">RICHPANEL</div>
                 {isLoggedIn && <div className="mr-4">Hello, {cookie.get('userName')}</div>}
