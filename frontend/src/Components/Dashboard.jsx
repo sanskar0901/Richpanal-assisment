@@ -48,12 +48,16 @@ const Dashboard = () => {
 
             <Navbar />
             <div className='px-16 py-8'>
-                {plansData === undefined || plansData.length === 0 ?
-                    <div className="flex flex-col items-center justify-center h-screen">
-                        <h1 className='text-xl font-semibold'>No Plans Lets Subscribe Now</h1>
-                        <Link to="/plans" className="px-4 py-2 bg-blue-500 text-white rounded-full">
-                            Buy Plans
-                        </Link></div> :
+                {plansData === undefined || plansData.length === 0 ? <>
+                    <h2 className="text-3xl font-bold mb-16 text-center">Add Plans</h2>
+                    <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                        <Link to="/plans" className="border p-4 rounded-md bg-gray-200 flex flex-col items-center justify-center hover:bg-gray-300 h-[40vh]">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-blue-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                <path fillRule="evenodd" d="M10 18a1 1 0 01-1-1V11H2a1 1 0 010-2h7V2a1 1 0 012 0v7h7a1 1 0 010 2h-7v6a1 1 0 01-1 1z" clipRule="evenodd" />
+                            </svg>
+                            <span className="ml-2 text-blue-500 font-bold">Buy Plans</span>
+                        </Link>
+                    </div></> :
                     <div>
                         <h2 className="text-3xl font-bold mb-16 text-center">Subscribed Plans</h2>
                         <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
