@@ -1,11 +1,11 @@
 // controllers/planController.js
-
+const nodemailer = require('nodemailer');
 const express = require('express');
 const User = require('../models/User.model');
 const BillingPlan = require('../models/Plan.model');
 const Subscription = require('../models/Subscription.model');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-
+require('dotenv').config();
 const router = express.Router();
 router.post('/subscribe', async (req, res) => {
     const { userId, planId, billingInterval, paymentMethodId } = req.body;
@@ -41,6 +41,44 @@ router.post('/subscribe', async (req, res) => {
         await subscription.save();
         user.subscriptions.push(subscription._id);
         await user.save();
+
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: process.env.EMAIL,
+                pass: process.env.PASSWORD
+            }
+        });
+
+        const mailOptions = {
+            from: process.env.EMAIL,
+            to: user.email,
+            subject: 'Subscription Confirmation',
+            html: `<h2>Subscription Confirmation</h2>
+            <p>Dear ${user.name},</p>
+            <p>Thank you for subscribing to our ${plan.name} plan. Your subscription is now active.</p>
+            <center>
+            <h3>Plan Details:</h3>
+            <p><strong>Plan Name:</strong> ${plan.name}</p>
+            <p><strong>Monthly Price:</strong> ${plan.monthlyPrice}</p>
+            <p><strong>Yearly Price:</strong> ${plan.yearlyPrice}</p>
+            <p><strong>Video Quality:</strong> ${plan.videoQuality}</p>
+            <p><strong>Resolution:</strong> ${plan.resolution}</p>
+            <p><strong>Devices You Can Use to Watch:</strong> ${plan.devices}</p>
+            <p><strong>Number of Active Screens at One Time:</strong> ${plan.screens}</p>
+            </center>
+            <p>Best regards,</p>
+            <p>RichPanel Team</p>
+            `,
+        };
+
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.error('Error sending email:', error);
+            } else {
+                console.log('Email sent:', info.response);
+            }
+        });
 
         res.json({ message: 'Subscription successful', status: true });
     } catch (err) {

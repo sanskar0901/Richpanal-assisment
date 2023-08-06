@@ -1,3 +1,4 @@
+import { toast } from 'react-toastify';
 import React, { useEffect, useState } from 'react';
 import cookie from 'js-cookie';
 import axios from 'axios';
@@ -33,6 +34,8 @@ const Dashboard = () => {
             axios.post(`${api}/subscription/cancel`, { subscriptionId }).then((res) => {
                 setPlansData(res.data.plans);
                 console.log(res.data);
+                toast.success('Subscription canceled successfully');
+                window.location.reload();
             }
             ).catch((error) => {
                 console.error('Error fetching plans:', error);
@@ -73,6 +76,12 @@ const Dashboard = () => {
 
                                 </div>
                             ))}
+                            <Link to="/plans" className="border p-4 rounded-md bg-gray-200 flex flex-col items-center justify-center hover:bg-gray-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-blue-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                    <path fillRule="evenodd" d="M10 18a1 1 0 01-1-1V11H2a1 1 0 010-2h7V2a1 1 0 012 0v7h7a1 1 0 010 2h-7v6a1 1 0 01-1 1z" clipRule="evenodd" />
+                                </svg>
+                                <span className="ml-2 text-blue-500 font-bold">Buy Plans</span>
+                            </Link>
                         </div>
                     </div>
                 }
