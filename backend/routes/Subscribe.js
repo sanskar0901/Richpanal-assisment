@@ -51,10 +51,10 @@ router.post('/subscribe', async (req, res) => {
 
 
 router.post('/cancel', async (req, res) => {
-    const { userId, subscriptionId } = req.body;
+    const { subscriptionId } = req.body;
 
     try {
-        const subscription = await Subscription.findOne({ _id: subscriptionId, user: userId });
+        const subscription = await Subscription.findOne({ _id: subscriptionId });
         if (!subscription) {
             return res.status(404).json({ message: 'Subscription not found' });
         }
@@ -83,6 +83,8 @@ router.get('/get/:id', async (req, res) => {
                 ...plan.toObject(),
                 expDate: subs.expDate,
                 billingInterval: subs.billingInterval,
+                stripeSubscriptionId: subs.stripeSubscriptionId,
+                subscriptionId: subs._id
             };
         });
 

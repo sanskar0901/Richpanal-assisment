@@ -1,4 +1,6 @@
 import axios from 'axios';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import cookie from 'js-cookie';
@@ -24,6 +26,7 @@ const Signup = () => {
             })
             .catch((err) => {
                 console.log(err);
+                toast.error(err.response.data.message);
             })
     }
 
